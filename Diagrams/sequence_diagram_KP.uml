@@ -1,0 +1,158 @@
+@startuml
+
+actor User
+participant "Sistema Operativo" as OS
+participant Controller
+participant Model
+participant View
+
+== 1. Inicialização do Programa ==
+User-[hidden]->User 
+activate User
+User -> Controller : Iniciar Programa()
+deactivate User
+activate Controller
+Controller -> View : Criar Interface()
+activate View
+Controller -> Model : Registar View como observadora
+deactivate Controluv syncler
+activate Model
+Model --> View : Confirmação de registo
+deactivate Model
+View -> OS : Desenhar janelas e botões ()
+deactivate View
+activate OS
+OS-[hidden]->OS 
+deactivate OS
+
+== 2. Importação de Dados ==
+User -> Controller : Receber clique no botão Importar Ficheiro ()
+activate User
+activate Controller
+Controller -> View : Ativar Interface de Carregar Ficheiro()
+deactivate User
+deactivate Controller
+activate View
+View -> OS : Desenhar janelas e botões de carregamento () 
+deactivate View
+activate OS
+OS-[hidden]->OS 
+deactivate OS
+
+activate User
+User -> Controller: Receber clique no botão Selecionar Ficheiro ()
+deactivate User
+activate Controller
+Controller -> Model : Importar ficheiro()
+deactivate Controller 
+activate Model
+Model -> Model: Validar ficheiro() 
+
+alt [2.1] Ficheiro inválido 
+    Model --> View: Notificar erro de validação
+    activate View
+    View -> OS: Gerar Mensagem de Erro: "O ficheiro selecionado não é válido."
+    deactivate View
+    activate OS
+    OS --> User: Erro: "O ficheiro selecionado não é válido."
+    deactivate OS
+    activate User
+    User-[hidden]->User 
+    deactivate User
+
+else [2.2] Ficheiro válido
+    Model -> Model : Importar dados ()
+    alt [2.2.1] Processamento falhou
+        Model --> View: Notificar erro de processamento
+        activate View
+        activate OS
+        View -> OS : Gerar Mensagem de Erro: "Não foi possível processar os dados do ficheiro."
+        deactivate View
+        OS --> User: Erro: "Não foi possível processar os dados do ficheiro."
+        activate User
+        deactivate User
+        deactivate OS
+
+    else [2.2.2] Processamento foi bem sucedido
+        Model --> View : Notificar importação bem-sucedida e lista de gráficos
+        deactivate Model
+        activate View
+        activate OS
+        View -> OS : Gerar Mensagem de Sucesso: "Ficheiro importado com sucesso." e Desenhar lista de tipos de gráficos disponíveis
+        deactivate View
+        OS --> User: Sucesso: "Ficheiro importado com sucesso." Lista de tipos de gráficos disponível.
+        activate User
+        deactivate User
+        deactivate OS
+    end
+end
+
+== 3. Criação e Customização do Gráfico ==
+User -> Controller : Receber clique do botão "Gráfico Selecionado"
+activate User
+activate Controller
+Controller -> View : Ativar Opções de Gráficos ()
+deactivate User
+deactivate Controller
+activate View
+activate OS
+View -> OS : Gerar Formulário de Campos do Gráfico ()
+deactivate View
+OS --> User : Formulário de Campos do Gráfico
+activate User
+deactivate OS
+User -> Controller : Submete formulário de campos do gráfico ao clicar no botão "Gerar Gráfico"
+activate Controller
+deactivate User
+deactivate View
+deactivate OS
+
+Controller -> Model : Gerar dados ()
+deactivate Controller
+activate Model
+Model -> Model : Processar dados ()
+Model -> Model : Gerar gráfico ()
+Model --> View : Notificar gráfico disponível
+deactivate Model
+activate View
+activate OS
+View -> OS : Desenhar gráfico () e interface de gravação
+deactivate View
+OS -> User : Gráfico gerado com sucesso.
+activate User
+User-[hidden]->User 
+deactivate OS
+
+== 4. Gravação de Gráfico ==
+User -> Controller : Clique no botão "Guardar Gráfico"
+deactivate User
+activate Controller
+Controller -> View : Ativar formulário de gravação
+deactivate Controller
+activate View
+activate OS
+View -> OS : Desenhar formulário de gravação
+deactivate View
+OS --> User : Formulário de gravação
+deactivate OS
+activate User
+User -> Controller : Submete formulário de gravação
+deactivate User
+activate Controller
+Controller -> Model : Gravar gráfico
+deactivate Controller
+activate Model
+Model -> Model : Gravar gráfico
+Model --> View : Notificar sucesso na gravação
+activate View
+deactivate Model
+
+View -> OS : Gerar Mensagem: "O gráfico foi guardado com sucesso."
+activate OS
+deactivate View
+OS --> User : Sucesso: "O gráfico foi guardado com sucesso."
+deactivate OS
+deactivate User
+
+@enduml
+
