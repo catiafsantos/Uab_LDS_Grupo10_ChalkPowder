@@ -13,12 +13,8 @@ User -> Controller : Iniciar Programa()
 deactivate User
 activate Controller
 Controller -> View : Criar Interface()
+deactivate Controller
 activate View
-Controller -> Model : Registar View como observadora
-deactivate Controluv syncler
-activate Model
-Model --> View : Confirmação de registo
-deactivate Model
 View -> OS : Desenhar janelas e botões ()
 deactivate View
 activate OS
