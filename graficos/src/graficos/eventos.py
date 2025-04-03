@@ -11,7 +11,7 @@ class Event:
     def __init__(self):
         self.__handlers = set()
 
-    def add_handler(self, handler: Callable) -> None:
+    def add_handler(self, handler: Callable[[], None]) -> None:
         self.__handlers.add(handler)
     
     def remove_handler(self, handler: Callable) -> None:
