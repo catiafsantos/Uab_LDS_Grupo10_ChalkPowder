@@ -1,0 +1,19 @@
+[project]
+name = "graficos"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+authors = [
+    { name = "andreiaRomao", email = "1702430@estudante.uab.pt" }
+]
+requires-python = ">=3.13"
+dependencies = [
+    "seaborn>=0.13.2",
+]
+
+[project.scripts]
+graficos = "graficos:main"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
